@@ -16,7 +16,7 @@ const Sidebar = () => {
               className={({ isActive }) => isActive ? 'active-link' : undefined}
             >
               <FaTachometerAlt className="icon" />
-              Dashboard
+              Overview Dashboard
             </NavLink>
           </li>
           <li>

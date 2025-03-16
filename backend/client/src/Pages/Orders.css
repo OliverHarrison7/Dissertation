@@ -1,0 +1,44 @@
+/* client/src/Pages/Orders.css */
+
+.orders-page {
+    padding: 20px;
+  }
+  
+  .orders-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .orders-actions button {
+    margin-left: 10px;
+  }
+  
+  .orders-filter-bar {
+    margin-bottom: 20px;
+  }
+  
+  .orders-filter-bar input {
+    padding: 8px;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+  }
+  
+  .orders-table th, .orders-table td {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .orders-table th {
+    background-color: #f9f9f9;
+  }
+  

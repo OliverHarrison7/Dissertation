@@ -1,0 +1,76 @@
+.products-page {
+    padding: 20px;
+  }
+  
+  .products-page h1 {
+    margin-bottom: 10px;
+  }
+  
+  /* Top bar (status filter, more filters, add product) */
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .top-bar-left {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .filter-select {
+    padding: 6px;
+  }
+  
+  .top-bar-right button {
+    margin-left: 10px;
+  }
+  
+  /* Bulk actions (edit products, more actions) */
+  .bulk-actions {
+    margin: 10px 0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  /* Search bar */
+  .search-bar {
+    margin-bottom: 10px;
+  }
+  
+  .search-bar input {
+    padding: 8px;
+    width: 250px;
+  }
+  
+  /* Export/Import bar */
+  .export-import-bar {
+    margin-bottom: 10px;
+    display: flex;
+    gap: 10px;
+  }
+  
+  /* Table styles */
+  .products-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+  }
+  
+  .products-table thead {
+    background-color: #f9f9f9;
+  }
+  
+  .products-table th,
+  .products-table td {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .no-products {
+    text-align: center;
+    padding: 20px;
+  }
+  

@@ -3,14 +3,15 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
+import Orders from './Pages/Orders';
 import Dashboard from './Pages/Dashboard';
-// import other pages if you have them (Orders, Products, etc.)
-import './App.css';
+import Products from './Pages/Products';
+import './App.css'; // Global styles
 
 function App() {
   const [users, setUsers] = useState([]);
 
-  // Example: if you have users data that might be shown on a different page
+  // Example: Fetch users data from backend
   useEffect(() => {
     axios.get('http://localhost:5000/api/users')
       .then(response => setUsers(response.data))
@@ -23,9 +24,13 @@ function App() {
         <Sidebar />
         <div className="main-content">
           <Routes>
+            {/* Route for your main dashboard page */}
             <Route path="/dashboard" element={<Dashboard users={users} />} />
-            {/* Other routes can go here */}
-            <Route path="/" element={<Dashboard users={users} />} /> {/* Default route */}
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/products" element={<Products />} />
+            {/* Add more routes here */}
+            {/* Default route goes to Dashboard as well */}
+            <Route path="/" element={<Dashboard users={users} />} />
           </Routes>
         </div>
       </div>
