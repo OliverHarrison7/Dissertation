@@ -1,44 +1,66 @@
-/* client/src/Pages/Orders.css */
-
 .orders-page {
-    padding: 20px;
-  }
-  
-  .orders-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-  }
-  
-  .orders-actions button {
-    margin-left: 10px;
-  }
-  
-  .orders-filter-bar {
-    margin-bottom: 20px;
-  }
-  
-  .orders-filter-bar input {
-    padding: 8px;
-    width: 250px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .orders-table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #fff;
-  }
-  
-  .orders-table th, .orders-table td {
-    text-align: left;
-    padding: 12px;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .orders-table th {
-    background-color: #f9f9f9;
-  }
-  
+  padding: 20px;
+}
+
+.orders-page h1 {
+  margin-bottom: 15px;
+}
+
+.orders-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.order-count {
+  font-size: 1.1em;
+}
+
+.pagination-info {
+  font-size: 0.9em;
+}
+
+.search-bar {
+  margin-bottom: 15px;
+}
+
+.search-bar input {
+  padding: 8px;
+  width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+}
+
+.orders-table th,
+.orders-table td {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.orders-table th {
+  background-color: #f9f9f9;
+}
+
+.no-orders {
+  text-align: center;
+  padding: 20px;
+}
+
+.pagination-controls {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.pagination-controls button {
+  padding: 8px 12px;
+}
