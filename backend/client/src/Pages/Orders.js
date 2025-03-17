@@ -1,12 +1,11 @@
-// client/src/Pages/Orders.js
 import React, { useState, useEffect } from 'react';
 
 function Orders() {
-  // Mock orders data; in a real app, you'd fetch from your backend
+ 
   const [orders, setOrders] = useState([]);
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10; // number of orders per page
+  const pageSize = 10; 
 
   useEffect(() => {
     // Example mock data
@@ -31,7 +30,7 @@ function Orders() {
         teamNotes: 'Assigned to Team A.',
         status: 'Open'
       },
-      // ... Add as many mock orders as you like to test pagination
+      
     ];
 
     // For demonstration, let's pretend we have 1092 open orders
@@ -40,12 +39,12 @@ function Orders() {
     for (let i = 0; i < 30; i++) {
       largeOrderList.push(...mockOrders.map((o) => ({ ...o, id: o.id + i * 100 })));
     }
-    // That gives ~60 orders. Increase if you want more test data.
+   
 
     setOrders(largeOrderList);
   }, []);
 
-  // Filter orders by searching customer name (or add more fields)
+  // Filter orders by searching customer name
   const filteredOrders = orders.filter((order) =>
     order.customer.toLowerCase().includes(search.toLowerCase())
   );
@@ -63,7 +62,7 @@ function Orders() {
   };
 
   const handleExportOrders = () => {
-    // Placeholder for export logic (CSV, Excel, etc.)
+    
     alert('Export Orders clicked!');
   };
 
@@ -74,7 +73,7 @@ function Orders() {
         <h2>Open Orders</h2>
         <div>
           <button onClick={handleExportOrders} style={{ marginRight: '10px' }}>Export Orders</button>
-          {/* Additional actions if needed */}
+         
         </div>
       </div>
 
