@@ -1,9 +1,7 @@
+/* client/src/Pages/Orders.css */
+
 .orders-page {
   padding: 20px;
-}
-
-.orders-page h1 {
-  margin-bottom: 15px;
 }
 
 .orders-header {
@@ -14,11 +12,11 @@
 }
 
 .order-count {
-  font-size: 1.1em;
+  font-size: 1rem;
 }
 
 .pagination-info {
-  font-size: 0.9em;
+  font-size: 0.9rem;
 }
 
 .search-bar {
@@ -63,4 +61,13 @@
 
 .pagination-controls button {
   padding: 8px 12px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.pagination-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
