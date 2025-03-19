@@ -8,6 +8,7 @@ import {
   MenuItem
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const AddProduct = () => {
   const [productData, setProductData] = useState({
@@ -24,15 +25,19 @@ const AddProduct = () => {
     setProductData({ ...productData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you can call your API or update global state to add the product
-    console.log('New Product Data:', productData);
-    alert('Product added successfully!');
-    
-    // Optionally, update your global state or call an API here
-    
-    // Reset the form after submission
+    try {
+      // Send POST request to add the product
+      const response = await axios.post('http://localhost:5000/api/products', productData);
+      console.log('New Product Added:', response.data);
+      alert('Product added successfully!');
+    } catch (error) {
+      console.error('Error adding product:', error);
+      alert('Failed to add product. Check console for details.');
+      return;
+    }
+    // Reset the form
     setProductData({
       name: '',
       status: 'Active',
@@ -40,8 +45,7 @@ const AddProduct = () => {
       type: '',
       vendor: '',
     });
-    
-    // Navigate back to the products page (ensure /products is correct)
+    // Navigate back to the products page
     navigate('/products');
   };
 
@@ -60,7 +64,6 @@ const AddProduct = () => {
           Add New Product
         </Typography>
 
-        {/* Back to Products Button */}
         <Button
           variant="outlined"
           color="secondary"
