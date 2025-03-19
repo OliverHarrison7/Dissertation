@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import Papa from 'papaparse';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './Products.css';
 
 function Products() {
@@ -6,68 +9,37 @@ function Products() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedProductIds, setSelectedProductIds] = useState([]);
+  const fileInputRef = useRef(null);
+  const navigate = useNavigate();
 
+  // Fetch products from your backend
   useEffect(() => {
-    // Mock data for demonstration; replace with real data from an API
-    const mockProducts = [
-      {
-        id: 1,
-        name: 'Bracelet',
-        status: 'Active',
-        inventory: 'In stock for 3 variants',
-        type: 'Jewelry',
-        vendor: 'My Brand',
-      },
-      {
-        id: 2,
-        name: 'Chatrual Sorook Peach Soju',
-        status: 'Active',
-        inventory: 'In stock',
-        type: 'Beverage',
-        vendor: 'Premium Drinks',
-      },
-      {
-        id: 3,
-        name: 'Diamonds Bracelet',
-        status: 'Draft',
-        inventory: 'In stock for 2 variants',
-        type: 'Jewelry',
-        vendor: 'Diamonds Inc.',
-      },
-      {
-        id: 4,
-        name: 'Premium Dry Gin',
-        status: 'Active',
-        inventory: 'In stock',
-        type: 'Beverage',
-        vendor: 'Premium Drinks',
-      },
-      {
-        id: 5,
-        name: 'Premium Leather Shoes',
-        status: 'Archived',
-        inventory: 'In stock',
-        type: 'Footwear',
-        vendor: 'Shoe Maker',
-      },
-    ];
-    setProducts(mockProducts);
+    const fetchProducts = async () => {
+      try {
+        // Adjust port/URL as needed for your server
+        const response = await axios.get('http://localhost:5000/api/products');
+        setProducts(response.data);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+    fetchProducts();
   }, []);
 
-  // Filter by status and search
+  // Filtered list
   const filteredProducts = products.filter((product) => {
     const matchesStatus =
-      statusFilter === 'all' || product.status.toLowerCase() === statusFilter;
+      statusFilter === 'all' ||
+      product.status.toLowerCase() === statusFilter;
     const matchesSearch = product.name
       .toLowerCase()
       .includes(search.toLowerCase());
     return matchesStatus && matchesSearch;
   });
 
-  // Handle bulk selection
+  // Bulk selection
   const handleSelectAll = (e) => {
     if (e.target.checked) {
-      // Select all visible products
       const allVisibleIds = filteredProducts.map((p) => p.id);
       setSelectedProductIds(allVisibleIds);
     } else {
@@ -87,7 +59,7 @@ function Products() {
     filteredProducts.length > 0 &&
     filteredProducts.every((p) => selectedProductIds.includes(p.id));
 
-  // Example: bulk action placeholders
+  // Bulk actions
   const handleEditProducts = () => {
     alert('Edit products action triggered');
   };
@@ -96,16 +68,54 @@ function Products() {
     alert('More actions dropdown triggered');
   };
 
+  // Navigate to AddProduct page
   const handleAddProduct = () => {
-    alert('Navigating to Add Product page');
+    // IMPORTANT: match the route path="/addproduct" in App.js
+    navigate('/addproduct');
   };
 
+  // CSV Export
   const handleExport = () => {
-    alert('Exporting products');
+    const csv = Papa.unparse(products);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'products.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
+  // CSV Import
   const handleImport = () => {
-    alert('Importing products');
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (results) => {
+        const importedProducts = results.data.map((row, index) => ({
+          id: row.id || Date.now() + index,
+          name: row.name || '',
+          status: row.status || '',
+          inventory: row.inventory || '',
+          type: row.type || '',
+          vendor: row.vendor || '',
+        }));
+        setProducts((prev) => [...prev, ...importedProducts]);
+      },
+      error: (error) => {
+        console.error('CSV parsing error:', error);
+      },
+    });
   };
 
   return (
@@ -159,6 +169,15 @@ function Products() {
         <button onClick={handleImport}>Import</button>
       </div>
 
+      {/* Hidden file input */}
+      <input
+        type="file"
+        accept=".csv"
+        ref={fileInputRef}
+        onChange={handleFileUpload}
+        style={{ display: 'none' }}
+      />
+
       {/* Products table */}
       <table className="products-table">
         <thead>
@@ -199,7 +218,6 @@ function Products() {
               </tr>
             );
           })}
-
           {filteredProducts.length === 0 && (
             <tr>
               <td colSpan="6" className="no-products">

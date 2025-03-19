@@ -1,12 +1,13 @@
 // client/src/Pages/Register.js
 import React, { useState } from 'react';
+import { Container, Box, Typography, TextField, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
-  const [email, setEmail]             = useState('');
-  const [password, setPassword]       = useState('');
+  const [email, setEmail]                   = useState('');
+  const [password, setPassword]             = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const navigate                      = useNavigate();
+  const navigate                          = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -15,7 +16,6 @@ const Register = () => {
       return;
     }
     try {
-      // Replace the URL with your actual API endpoint if needed.
       const response = await fetch('http://localhost:5000/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -26,7 +26,7 @@ const Register = () => {
         throw new Error(data.message || 'Registration failed');
       }
       alert('Registration successful!');
-      navigate('/login'); // navigate to login page after successful registration
+      navigate('/login');
     } catch (err) {
       console.error(err);
       alert(err.message || 'Registration error.');
@@ -34,42 +34,66 @@ const Register = () => {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '4px' }}>
-      <h2>Register</h2>
-      <form onSubmit={handleRegister}>
-        <div style={{ marginBottom: '10px' }}>
-          <label>Email:</label><br />
-          <input 
+    <Container maxWidth="sm">
+      <Box
+        sx={{
+          mt: 8,
+          p: 4,
+          border: '1px solid #ccc',
+          borderRadius: 2,
+          boxShadow: 3,
+          backgroundColor: '#fff'
+        }}
+      >
+        <Typography variant="h4" align="center" gutterBottom>
+          Register
+        </Typography>
+        <form onSubmit={handleRegister}>
+          <TextField
+            label="Email"
             type="email"
+            fullWidth
+            margin="normal"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            style={{ width: '100%', padding: '8px' }}
+            required
           />
-        </div>
-        <div style={{ marginBottom: '10px' }}>
-          <label>Password:</label><br />
-          <input 
+          <TextField
+            label="Password"
             type="password"
+            fullWidth
+            margin="normal"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            style={{ width: '100%', padding: '8px' }}
+            required
           />
-        </div>
-        <div style={{ marginBottom: '10px' }}>
-          <label>Confirm Password:</label><br />
-          <input 
+          <TextField
+            label="Confirm Password"
             type="password"
+            fullWidth
+            margin="normal"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            style={{ width: '100%', padding: '8px' }}
+            required
           />
-        </div>
-        <button type="submit" style={{ width: '100%', padding: '10px' }}>Register</button>
-      </form>
-      <p style={{ marginTop: '10px' }}>
-        Already have an account? <a href="/login">Login here</a>
-      </p>
-    </div>
+          <Button 
+            type="submit" 
+            variant="contained" 
+            color="primary" 
+            fullWidth 
+            sx={{ mt: 2 }}
+          >
+            Register
+          </Button>
+        </form>
+        <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+          Already have an account?{' '}
+          <Button onClick={() => navigate('/login')} variant="text" color="primary">
+            Login here
+          </Button>
+        </Typography>
+      </Box>
+    </Container>
   );
 };
 
