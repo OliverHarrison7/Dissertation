@@ -1,3 +1,4 @@
+// backend/index.js
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
@@ -31,28 +32,25 @@ async function getPool() {
   }
 }
 
-// ----- User Endpoints ----- //
+// ----- User Endpoints -----
 
 // POST /register - Register a new user
 app.post('/register', async (req, res) => {
   try {
     const { email, password } = req.body;
-    
     if (!email || !password) {
       return res.status(400).json({ message: 'Email and password are required.' });
     }
-    
     const hashedPassword = await bcrypt.hash(password, 10);
     const pool = await getPool();
     await pool.request()
       .input('email', sql.NVarChar, email)
       .input('password', sql.NVarChar, hashedPassword)
       .query(`INSERT INTO users (email, password) VALUES (@email, @password)`);
-    
     res.status(201).json({ message: 'User registered successfully!' });
   } catch (error) {
     console.error('Registration error:', error);
-    return res.status(500).json({ message: 'Error registering user.', error });
+    res.status(500).json({ message: 'Error registering user.', error });
   }
 });
 
@@ -60,34 +58,29 @@ app.post('/register', async (req, res) => {
 app.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    
     if (!email || !password) {
       return res.status(400).json({ message: 'Email and password are required.' });
     }
-    
     const pool = await getPool();
     const userResult = await pool.request()
       .input('email', sql.NVarChar, email)
       .query(`SELECT * FROM users WHERE email = @email`);
-    
     if (userResult.recordset.length === 0) {
       return res.status(401).json({ message: 'Invalid credentials.' });
     }
-    
     const user = userResult.recordset[0];
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
       return res.status(401).json({ message: 'Invalid credentials.' });
     }
-    
     res.json({ message: 'Login successful!' });
   } catch (error) {
     console.error('Login error:', error);
-    return res.status(500).json({ message: 'Error logging in.', error });
+    res.status(500).json({ message: 'Error logging in.', error });
   }
 });
 
-// ----- Product Endpoints ----- //
+// ----- Product Endpoints -----
 
 // GET /api/products - Fetch all products
 app.get('/api/products', async (req, res) => {
@@ -101,14 +94,30 @@ app.get('/api/products', async (req, res) => {
   }
 });
 
+// GET /api/products/:id - Fetch a single product by ID
+app.get('/api/products/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const pool = await getPool();
+    const result = await pool.request()
+      .input('id', sql.Int, id)
+      .query('SELECT * FROM Products WHERE id = @id');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Product not found.' });
+    }
+    res.json(result.recordset[0]);
+  } catch (error) {
+    console.error('Error fetching product:', error);
+    res.status(500).json({ message: 'Error fetching product.', error });
+  }
+});
+
 // POST /api/products - Add a new product
 app.post('/api/products', async (req, res) => {
   const { name, status, inventory, type, vendor } = req.body;
-  
   if (!name) {
     return res.status(400).json({ message: 'Product name is required.' });
   }
-  
   try {
     const pool = await getPool();
     const result = await pool.request()
@@ -122,7 +131,6 @@ app.post('/api/products', async (req, res) => {
          OUTPUT INSERTED.id 
          VALUES (@name, @status, @inventory, @type, @vendor)`
       );
-      
     if (result.recordset && result.recordset.length > 0) {
       const insertedId = result.recordset[0].id;
       console.log(`Inserted product with ID: ${insertedId}`);
@@ -134,6 +142,59 @@ app.post('/api/products', async (req, res) => {
   } catch (error) {
     console.error('Error inserting product:', error);
     res.status(500).json({ message: 'Error inserting product.', error });
+  }
+});
+
+// PUT /api/products/:id - Update an existing product
+app.put('/api/products/:id', async (req, res) => {
+  const { id } = req.params;
+  const { name, status, inventory, type, vendor } = req.body;
+  if (!name) {
+    return res.status(400).json({ message: 'Product name is required.' });
+  }
+  try {
+    const pool = await getPool();
+    const result = await pool.request()
+      .input('id', sql.Int, id)
+      .input('name', sql.NVarChar, name)
+      .input('status', sql.NVarChar, status)
+      .input('inventory', sql.NVarChar, inventory)
+      .input('type', sql.NVarChar, type)
+      .input('vendor', sql.NVarChar, vendor)
+      .query(
+        `UPDATE Products 
+         SET name = @name, status = @status, inventory = @inventory, type = @type, vendor = @vendor 
+         WHERE id = @id;
+         SELECT * FROM Products WHERE id = @id;`
+      );
+    if (result.recordset && result.recordset.length > 0) {
+      const updatedProduct = result.recordset[0];
+      res.json(updatedProduct);
+    } else {
+      res.status(404).json({ message: 'Product not found.' });
+    }
+  } catch (error) {
+    console.error('Error updating product:', error);
+    res.status(500).json({ message: 'Error updating product.', error });
+  }
+});
+
+// DELETE /api/products/:id - Delete a product
+app.delete('/api/products/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const pool = await getPool();
+    const result = await pool.request()
+      .input('id', sql.Int, id)
+      .query('DELETE FROM Products WHERE id = @id');
+    if (result.rowsAffected[0] > 0) {
+      res.json({ message: 'Product deleted successfully.' });
+    } else {
+      res.status(404).json({ message: 'Product not found.' });
+    }
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    res.status(500).json({ message: 'Error deleting product.', error });
   }
 });
 

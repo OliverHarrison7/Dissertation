@@ -15,10 +15,11 @@ const Customers = () => {
   const [customers, setCustomers] = useState([]);
   const [search, setSearch] = useState('');
 
-  // Reference to the hidden file input element
+  // Reference for the hidden file input element
   const fileInputRef = useRef(null);
 
   useEffect(() => {
+    // Mock data for demonstration
     const sampleCustomers = [
       {
         id: 1,
@@ -50,24 +51,23 @@ const Customers = () => {
     ];
     setCustomers(sampleCustomers);
 
-    // Uncomment this to fetch from your API:
+    // Or fetch from an API if you prefer:
     // axios.get('http://localhost:5000/api/customers')
     //   .then((response) => setCustomers(response.data))
     //   .catch(console.error);
   }, []);
 
-  // Search functionality
+  // Filter by search
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
   };
 
-  // Filtered list of customers
   const filteredCustomers = customers.filter((customer) =>
     customer.name.toLowerCase().includes(search.toLowerCase()) ||
     customer.email.toLowerCase().includes(search.toLowerCase())
   );
 
-  // DataGrid column definitions
+  // DataGrid columns
   const columns = [
     { field: 'name', headerName: 'Customer Name', flex: 1 },
     { field: 'email', headerName: 'Email', flex: 1 },
@@ -77,21 +77,16 @@ const Customers = () => {
     { field: 'tags', headerName: 'Tags', flex: 1 }
   ];
 
-  // Top-level metrics
+  // Top-level metrics (example calculations)
   const totalCustomers = customers.length;
-  const newCustomers = Math.round(totalCustomers * 0.2); // example ratio
+  const newCustomers = Math.round(totalCustomers * 0.2);
   const returningCustomers = totalCustomers - newCustomers;
-  const avgCLV =
-    totalCustomers > 0
-      ? (
-          customers.reduce((sum, cust) => sum + cust.totalSpent, 0) /
-          totalCustomers
-        ).toFixed(2)
-      : 0;
+  const avgCLV = totalCustomers > 0
+    ? (customers.reduce((sum, c) => sum + c.totalSpent, 0) / totalCustomers).toFixed(2)
+    : 0;
 
-  // Handle CSV Import
+  // CSV Import
   const handleImportClick = () => {
-    // Programmatically click the hidden file input
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
@@ -105,9 +100,8 @@ const Customers = () => {
       header: true,
       skipEmptyLines: true,
       complete: (results) => {
-        // Transform CSV data into our customer shape
-        const importedCustomers = results.data.map((row, index) => ({
-          id: row.id || Date.now() + index, // fallback if no ID column
+        const importedData = results.data.map((row, index) => ({
+          id: row.id || Date.now() + index,
           name: row.name || '',
           email: row.email || '',
           totalOrders: Number(row.totalOrders) || 0,
@@ -115,9 +109,7 @@ const Customers = () => {
           lastOrder: row.lastOrder || '',
           tags: row.tags || ''
         }));
-
-        // Merge imported data with existing customers
-        setCustomers((prev) => [...prev, ...importedCustomers]);
+        setCustomers((prev) => [...prev, ...importedData]);
       },
       error: (error) => {
         console.error('CSV parsing error:', error);
@@ -125,7 +117,7 @@ const Customers = () => {
     });
   };
 
-  // Handle CSV Export
+  // CSV Export
   const handleExportClick = () => {
     const csv = Papa.unparse(customers);
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -173,7 +165,7 @@ const Customers = () => {
         </Grid>
       </Grid>
 
-      {/* Search and Import/Export Buttons */}
+      {/* Search and Import/Export */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
         <TextField
           label="Search Customers"
@@ -183,7 +175,6 @@ const Customers = () => {
           sx={{ width: '300px' }}
         />
         <Box>
-          {/* Import CSV */}
           <Button
             variant="outlined"
             color="secondary"
@@ -192,17 +183,10 @@ const Customers = () => {
           >
             Import CSV
           </Button>
-
-          {/* Export CSV */}
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleExportClick}
-          >
+          <Button variant="contained" color="primary" onClick={handleExportClick}>
             Export CSV
           </Button>
-
-          {/* Hidden file input for CSV import */}
+          {/* Hidden file input */}
           <input
             type="file"
             accept=".csv"
@@ -213,7 +197,7 @@ const Customers = () => {
         </Box>
       </Box>
 
-      {/* DataGrid for Customer List */}
+      {/* DataGrid */}
       <Box sx={{ height: 400, width: '100%' }}>
         <DataGrid
           rows={filteredCustomers}

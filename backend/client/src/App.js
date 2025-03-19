@@ -1,7 +1,7 @@
 // client/src/App.js
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import WelcomeNavBar from './components/WelcomeNavBar'; // Your marketing navbar
+import WelcomeNavBar from './components/WelcomeNavBar';
 import Sidebar from './components/Sidebar';
 
 import Welcome from './Pages/Welcome';
@@ -10,16 +10,18 @@ import Register from './Pages/Register';
 import Dashboard from './Pages/Dashboard';
 import Orders from './Pages/Orders';
 import Products from './Pages/Products';
+import Customers from './Pages/Customers';
+import AddProduct from './Pages/AddProduct';
+import EditProduct from './Pages/EditProduct';
 import About from './Pages/About';
 import Services from './Pages/Services';
 import Pricing from './Pages/Pricing';
 import Contact from './Pages/Contact';
-import Customers from './Pages/Customers';
-import AddProduct from './Pages/AddProduct';
+import Marketing from './Pages/Marketing';
 
 import './App.css';
 
-// Marketing/Public layout: uses WelcomeNavBar for all public pages
+// Public layout
 const MarketingLayout = ({ children }) => (
   <div className="marketing-container">
     <WelcomeNavBar />
@@ -27,21 +29,18 @@ const MarketingLayout = ({ children }) => (
   </div>
 );
 
-// Protected layout: uses sidebar and (optionally) a different navbar
+// Protected layout
 const ProtectedLayout = ({ children }) => (
   <div className="dashboard-container">
-    {/* If you want a different NavBar for the dashboard, import it and place it here */}
     <Sidebar />
-    <div className="main-content">
-      {children}
-    </div>
+    <div className="main-content">{children}</div>
   </div>
 );
 
 function App() {
   return (
     <Routes>
-      {/* All public pages share the same layout (WelcomeNavBar) */}
+      {/* Public routes */}
       <Route path="/" element={<MarketingLayout><Welcome /></MarketingLayout>} />
       <Route path="/about" element={<MarketingLayout><About /></MarketingLayout>} />
       <Route path="/services" element={<MarketingLayout><Services /></MarketingLayout>} />
@@ -50,12 +49,14 @@ function App() {
       <Route path="/login" element={<MarketingLayout><Login /></MarketingLayout>} />
       <Route path="/register" element={<MarketingLayout><Register /></MarketingLayout>} />
 
-      {/* Protected pages (sidebar, etc.) */}
+      {/* Protected routes */}
       <Route path="/dashboard" element={<ProtectedLayout><Dashboard /></ProtectedLayout>} />
       <Route path="/orders" element={<ProtectedLayout><Orders /></ProtectedLayout>} />
       <Route path="/products" element={<ProtectedLayout><Products /></ProtectedLayout>} />
       <Route path="/customers" element={<ProtectedLayout><Customers /></ProtectedLayout>} />
       <Route path="/addproduct" element={<ProtectedLayout><AddProduct /></ProtectedLayout>} />
+      <Route path="/editproduct/:id" element={<ProtectedLayout><EditProduct /></ProtectedLayout>} />
+      <Route path="/marketing" element={<ProtectedLayout><Marketing /></ProtectedLayout>} />
     </Routes>
   );
 }
