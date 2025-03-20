@@ -6,20 +6,33 @@ import { useNavigate } from 'react-router-dom';
 const Login = () => {
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
-  const navigate              = useNavigate();
+  const navigate                = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
+      // 1) Send email/password to backend
       const response = await axios.post('http://localhost:5000/login', {
         email,
         password
       });
-      alert(response.data.message);
-      // If login is successful, navigate to the dashboard
+
+      // 2) Alert the success message
+      alert(response.data.message); 
+      // e.g. "Login successful!"
+
+      // 3) Store the token in localStorage
+      // The backend response must include { token: "<JWT>" }
+      if (response.data.token) {
+        localStorage.setItem('myToken', response.data.token);
+      }
+
+      // 4) Navigate to /dashboard or MyAccount
       navigate('/dashboard');
+
     } catch (err) {
       console.error(err);
+      // If the backend returns an error with a message, show it
       alert(err.response?.data?.message || 'Login error.');
     }
   };

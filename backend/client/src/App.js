@@ -18,6 +18,8 @@ import Services from './Pages/Services';
 import Pricing from './Pages/Pricing';
 import Contact from './Pages/Contact';
 import Marketing from './Pages/Marketing';
+import Discounts from './Pages/Discounts';
+import MyAccount from './Pages/MyAccount';
 
 import './App.css';
 
@@ -57,6 +59,8 @@ function App() {
       <Route path="/addproduct" element={<ProtectedLayout><AddProduct /></ProtectedLayout>} />
       <Route path="/editproduct/:id" element={<ProtectedLayout><EditProduct /></ProtectedLayout>} />
       <Route path="/marketing" element={<ProtectedLayout><Marketing /></ProtectedLayout>} />
+      <Route path="/discounts" element={<ProtectedLayout><Discounts /></ProtectedLayout>} />
+      <Route path="/my-account" element={<ProtectedLayout><MyAccount /></ProtectedLayout>} />
     </Routes>
   );
 }
