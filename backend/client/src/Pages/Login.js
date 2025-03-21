@@ -28,7 +28,7 @@ const Login = () => {
       }
 
       // 4) Navigate to /dashboard or MyAccount
-      navigate('/dashboard');
+      navigate('/home');
 
     } catch (err) {
       console.error(err);

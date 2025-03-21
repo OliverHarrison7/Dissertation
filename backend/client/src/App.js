@@ -21,6 +21,7 @@ import Marketing from './Pages/Marketing';
 import Discounts from './Pages/Discounts';
 import MyAccount from './Pages/MyAccount';
 import Analytics from './Pages/Analytics';
+import Settings from './Pages/Settings';
 
 import './App.css';
 
@@ -63,6 +64,7 @@ function App() {
       <Route path="/discounts" element={<ProtectedLayout><Discounts /></ProtectedLayout>} />
       <Route path="/my-account" element={<ProtectedLayout><MyAccount /></ProtectedLayout>} />
       <Route path="/analytics" element={<ProtectedLayout><Analytics /></ProtectedLayout>} />
+      <Route path="/settings" element={<ProtectedLayout><Settings /></ProtectedLayout>} />
     </Routes>
   );
 }

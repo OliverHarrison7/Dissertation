@@ -642,6 +642,87 @@ app.get('/api/marketing', authMiddleware, async (req, res) => {
   }
 });
 
+
+/****************************************************
+ *           Store Settings Endpoints
+ ****************************************************/
+// GET /api/settings - Fetch the logged-in user's store settings
+app.get('/api/settings', authMiddleware, async (req, res) => {
+  try {
+    const userId = req.userId; // from authMiddleware
+    const pool = await getPool();
+    const result = await pool.request()
+      .input('user_id', sql.Int, userId)
+      .query(`
+         SELECT storeName, storeEmail, currency, taxRate, shippingCost, freeShipping
+         FROM StoreSettings
+         WHERE user_id = @user_id
+      `);
+    if (result.recordset.length === 0) {
+      // If no settings exist, return default values
+      return res.json({
+         storeName: '',
+         storeEmail: '',
+         currency: 'USD',
+         taxRate: 0,
+         shippingCost: 0,
+         freeShipping: 0
+      });
+    }
+    res.json(result.recordset[0]);
+  } catch (error) {
+    console.error('Error fetching settings:', error);
+    res.status(500).json({ message: 'Error fetching settings.', error });
+  }
+});
+
+// PUT /api/settings - Update the logged-in user's store settings
+app.put('/api/settings', authMiddleware, async (req, res) => {
+  try {
+    const userId = req.userId; // from authMiddleware
+    const { storeName, storeEmail, currency, taxRate, shippingCost, freeShipping } = req.body;
+    const pool = await getPool();
+    const updateResult = await pool.request()
+      .input('user_id', sql.Int, userId)
+      .input('storeName', sql.NVarChar, storeName || '')
+      .input('storeEmail', sql.NVarChar, storeEmail || '')
+      .input('currency', sql.NVarChar, currency || 'USD')
+      .input('taxRate', sql.Float, taxRate || 0)
+      .input('shippingCost', sql.Float, shippingCost || 0)
+      .input('freeShipping', sql.Bit, freeShipping ? 1 : 0)
+      .query(`
+         IF EXISTS (SELECT * FROM StoreSettings WHERE user_id = @user_id)
+           UPDATE StoreSettings
+           SET storeName = @storeName,
+               storeEmail = @storeEmail,
+               currency = @currency,
+               taxRate = @taxRate,
+               shippingCost = @shippingCost,
+               freeShipping = @freeShipping
+           WHERE user_id = @user_id;
+         ELSE
+           INSERT INTO StoreSettings (user_id, storeName, storeEmail, currency, taxRate, shippingCost, freeShipping)
+           VALUES (@user_id, @storeName, @storeEmail, @currency, @taxRate, @shippingCost, @freeShipping);
+         
+         SELECT storeName, storeEmail, currency, taxRate, shippingCost, freeShipping
+         FROM StoreSettings
+         WHERE user_id = @user_id;
+      `);
+    res.json(updateResult.recordset[0]);
+  } catch (error) {
+    console.error('Error updating settings:', error);
+    res.status(500).json({ message: 'Error updating settings.', error });
+  }
+});
+
+
+
+
+
+
+
+
+
 /****************************************************
  *               Start Server
  ****************************************************/
