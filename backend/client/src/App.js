@@ -3,6 +3,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import WelcomeNavBar from './components/WelcomeNavBar';
 import Sidebar from './components/Sidebar';
+import Footer from './components/Footer';
 
 import Welcome from './Pages/Welcome';
 import Login from './Pages/Login';
@@ -25,20 +26,26 @@ import Settings from './Pages/Settings';
 
 import './App.css';
 
-// Public layout
+// Public layout: for marketing pages
 const MarketingLayout = ({ children }) => (
-  <div className="marketing-container">
+  <>
     <WelcomeNavBar />
-    {children}
-  </div>
+    <div className="content">{children}</div>
+    <Footer />
+  </>
 );
 
-// Protected layout
+// Protected layout: for authenticated pages (dashboard)
 const ProtectedLayout = ({ children }) => (
-  <div className="dashboard-container">
-    <Sidebar />
-    <div className="main-content">{children}</div>
-  </div>
+  <>
+    <div className="dashboard-container" style={{ display: 'flex', minHeight: '100vh' }}>
+      <Sidebar />
+      <div className="main-content" style={{ flex: 1 }}>
+        {children}
+      </div>
+    </div>
+    <Footer />
+  </>
 );
 
 function App() {

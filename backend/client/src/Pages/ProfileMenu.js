@@ -1,18 +1,13 @@
+// client/src/components/ProfileMenu.js
 import React, { useState } from 'react';
-import {
-  IconButton,
-  Menu,
-  MenuItem,
-  Avatar,
-  ListItemIcon,
-  Typography
-} from '@mui/material';
+import { IconButton, Menu, MenuItem, Avatar, ListItemIcon, Typography } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { useNavigate } from 'react-router-dom';
 
-const ProfileMenu = ({ onLogout, onAccount }) => {
-  // Anchor for the MUI Menu
+const ProfileMenu = () => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate();
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -23,28 +18,22 @@ const ProfileMenu = ({ onLogout, onAccount }) => {
 
   const handleAccountClick = () => {
     handleMenuClose();
-    if (onAccount) onAccount(); // e.g. navigate to account page
+    navigate('/my-account');  // Make sure this is exactly "/my-account"
   };
 
   const handleLogoutClick = () => {
     handleMenuClose();
-    if (onLogout) onLogout(); // e.g. clear token, navigate to /login
+    // Clear any tokens here if needed
+    navigate('/login');
   };
 
   return (
     <>
-      <IconButton
-        onClick={handleMenuOpen}
-        color="inherit"
-        sx={{ ml: 2 }}
-      >
-        {/* Could use an <Avatar> or <AccountCircleIcon> */}
+      <IconButton onClick={handleMenuOpen} color="inherit" sx={{ ml: 2 }}>
         <Avatar sx={{ bgcolor: 'primary.main' }}>
-          {/* Optionally place user’s initials or an icon */}
           <AccountCircleIcon />
         </Avatar>
       </IconButton>
-
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
