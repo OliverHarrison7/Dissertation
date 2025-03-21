@@ -17,19 +17,20 @@ import LogoutIcon from '@mui/icons-material/Logout';
 
 function NavBar() {
   const navigate = useNavigate();
-  // For anchoring the profile menu
+
+  // State for anchoring the profile menu
   const [anchorEl, setAnchorEl] = useState(null);
 
   // Example search handling
   const handleSearch = (e) => {
     if (e.key === 'Enter') {
       console.log('Search value:', e.target.value);
-      // Possibly navigate to a search results page:
+      // Potentially navigate to a search results page:
       // navigate(`/search?query=${encodeURIComponent(e.target.value)}`);
     }
   };
 
-  // Handlers for the profile icon menu
+  // Handlers for the profile menu
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -39,14 +40,14 @@ function NavBar() {
 
   const handleMyAccount = () => {
     handleProfileMenuClose();
-    // e.g. navigate to /my-account
+    // e.g. navigate to /account
     navigate('/my-account');
   };
 
   const handleLogout = () => {
     handleProfileMenuClose();
-    // e.g. remove auth tokens, then navigate to /login
-    console.log('Logout clicked');
+    // e.g. clear auth tokens, navigate to /login
+    console.log('Logging out...');
     navigate('/login');
   };
 
@@ -77,13 +78,21 @@ function NavBar() {
           />
         </Box>
 
-        {/* Profile Avatar / Menu */}
+        {/* Right-side Profile Avatar */}
         <Box>
-          <IconButton onClick={handleProfileMenuOpen} color="inherit">
+          <IconButton
+            onClick={handleProfileMenuOpen}
+            color="inherit"
+            sx={{ ml: 1 }}
+          >
+            {/* Could use a real user avatar or an icon. 
+                We'll do a generic Avatar with an icon inside. */}
             <Avatar sx={{ bgcolor: 'primary.main' }}>
               <AccountCircleIcon />
             </Avatar>
           </IconButton>
+          
+          {/* Profile Menu */}
           <Menu
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}

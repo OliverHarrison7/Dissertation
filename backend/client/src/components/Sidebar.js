@@ -40,7 +40,7 @@ const Sidebar = () => {
   // Example: On "My Account" click, navigate to some /my-account route
   const handleMyAccount = () => {
     handleProfileMenuClose();
-    navigate('/my-account');
+    navigate('/myaccount');
   };
 
   // Example: On "Logout" click, you might clear tokens, then navigate
@@ -93,11 +93,11 @@ const Sidebar = () => {
         <ul>
           <li>
             <NavLink 
-              to="/dashboard" 
+              to="/home" 
               className={({ isActive }) => (isActive ? 'active-link' : undefined)}
             >
               <FaTachometerAlt className="icon" />
-              Overview Dashboard
+              Home
             </NavLink>
           </li>
           <li>

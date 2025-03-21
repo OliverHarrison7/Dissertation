@@ -6,7 +6,7 @@
     margin-bottom: 10px;
   }
   
-  /* Top bar (status filter, more filters, add product) */
+
   .top-bar {
     display: flex;
     justify-content: space-between;
@@ -26,7 +26,7 @@
     margin-left: 10px;
   }
   
-  /* Bulk actions (edit products, more actions) */
+
   .bulk-actions {
     margin: 10px 0;
     display: flex;
@@ -34,7 +34,7 @@
     align-items: center;
   }
   
-  /* Search bar */
+
   .search-bar {
     margin-bottom: 10px;
   }
@@ -43,15 +43,14 @@
     padding: 8px;
     width: 250px;
   }
-  
-  /* Export/Import bar */
+
   .export-import-bar {
     margin-bottom: 10px;
     display: flex;
     gap: 10px;
   }
   
-  /* Table styles */
+
   .products-table {
     width: 100%;
     border-collapse: collapse;

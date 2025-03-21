@@ -7,7 +7,7 @@ import Sidebar from './components/Sidebar';
 import Welcome from './Pages/Welcome';
 import Login from './Pages/Login';
 import Register from './Pages/Register';
-import Dashboard from './Pages/Dashboard';
+import Home from './Pages/Home';
 import Orders from './Pages/Orders';
 import Products from './Pages/Products';
 import Customers from './Pages/Customers';
@@ -20,6 +20,7 @@ import Contact from './Pages/Contact';
 import Marketing from './Pages/Marketing';
 import Discounts from './Pages/Discounts';
 import MyAccount from './Pages/MyAccount';
+import Analytics from './Pages/Analytics';
 
 import './App.css';
 
@@ -52,7 +53,7 @@ function App() {
       <Route path="/register" element={<MarketingLayout><Register /></MarketingLayout>} />
 
       {/* Protected routes */}
-      <Route path="/dashboard" element={<ProtectedLayout><Dashboard /></ProtectedLayout>} />
+      <Route path="/home" element={<ProtectedLayout><Home /></ProtectedLayout>} />
       <Route path="/orders" element={<ProtectedLayout><Orders /></ProtectedLayout>} />
       <Route path="/products" element={<ProtectedLayout><Products /></ProtectedLayout>} />
       <Route path="/customers" element={<ProtectedLayout><Customers /></ProtectedLayout>} />
@@ -61,6 +62,7 @@ function App() {
       <Route path="/marketing" element={<ProtectedLayout><Marketing /></ProtectedLayout>} />
       <Route path="/discounts" element={<ProtectedLayout><Discounts /></ProtectedLayout>} />
       <Route path="/my-account" element={<ProtectedLayout><MyAccount /></ProtectedLayout>} />
+      <Route path="/analytics" element={<ProtectedLayout><Analytics /></ProtectedLayout>} />
     </Routes>
   );
 }

@@ -1,6 +1,3 @@
-/***********************************************
- * File: client/src/Pages/MyAccount.js
- ***********************************************/
 import React, { useState, useEffect } from 'react';
 import {
   Container,
@@ -25,7 +22,7 @@ function MyAccount() {
 
   // On mount, fetch user from /api/users/me
   useEffect(() => {
-    // 1) get token from localStorage (assuming you stored it after login)
+    // 1) get token from localStorage 
     const token = localStorage.getItem('myToken');
     if (!token) {
       console.warn('No token found; user is not logged in');
@@ -33,7 +30,7 @@ function MyAccount() {
       return;
     }
 
-    // 2) fetch /api/users/me with Authorization header
+    // 2) fetch /api/users/me with Authorisation header
     fetch('http://localhost:5000/api/users/me', {
       headers: {
         Authorization: `Bearer ${token}`
@@ -44,7 +41,7 @@ function MyAccount() {
         return res.json();
       })
       .then((user) => {
-        // user includes email, name, phone, role, createdAt
+        
         setUserData({
           email: user.email || '',
           name: user.name || '',
@@ -66,7 +63,7 @@ function MyAccount() {
     setUserData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Save changes -> PUT /api/users/me
+ 
   const handleSave = async () => {
     const token = localStorage.getItem('myToken');
     if (!token) {
