@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+// client/src/Pages/Marketing.js
+import React, { useState, useRef, useEffect } from 'react';
 import Papa from 'papaparse';
 import {
   Container,
@@ -14,8 +15,6 @@ import {
   TableCell,
   TableBody
 } from '@mui/material';
-
-// Recharts imports
 import {
   ResponsiveContainer,
   LineChart,
@@ -29,40 +28,73 @@ const Marketing = () => {
   const [marketingData, setMarketingData] = useState([]);
   const fileInputRef = useRef(null);
 
-  // The user clicks "Import CSV" button
+  // Load marketing data from backend when component mounts
+  useEffect(() => {
+    const token = localStorage.getItem('myToken');
+    if (token) {
+      fetch('http://localhost:5000/api/marketing', {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error('Failed to fetch marketing data');
+          return res.json();
+        })
+        .then((data) => setMarketingData(data))
+        .catch((err) => console.error('Error fetching marketing data:', err));
+    }
+  }, []);
+
   const handleImportClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
 
-  // When user selects a CSV
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
-      complete: (results) => {
-        setMarketingData(results.data);
+      complete: async (results) => {
+        const data = results.data;
+        setMarketingData(data);
+        // Save imported data to backend
+        const token = localStorage.getItem('myToken');
+        if (token) {
+          try {
+            const res = await fetch('http://localhost:5000/api/marketing', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+              },
+              body: JSON.stringify(data)
+            });
+            if (!res.ok) {
+              throw new Error('Failed to save marketing data');
+            }
+            alert('Marketing data saved successfully!');
+          } catch (error) {
+            console.error('Error saving marketing data:', error);
+            alert('Error saving marketing data.');
+          }
+        } else {
+          alert('No token found; please log in.');
+        }
       },
       error: (err) => {
         console.error('Error parsing marketing CSV:', err);
-      },
+      }
     });
   };
 
-  // --- Compute summary stats from marketingData ---
-  // Example: sum of Sessions, sum of Orders, sum of Sales.
-  // Adjust column names to match your CSV exactly (e.g. "Sessions", "Orders", "Sales").
+  // Compute KPIs from marketingData
   const totalSessions = marketingData.reduce((sum, row) => sum + Number(row.Sessions || 0), 0);
   const totalOrders = marketingData.reduce((sum, row) => sum + Number(row.Orders || 0), 0);
   const totalSales = marketingData.reduce((sum, row) => sum + Number(row.Sales || 0), 0).toFixed(2);
 
-  // Example: Build data for a line chart grouped by Date
-  // If your CSV has multiple rows per date, you might need to group them.
-  // For simplicity, let's assume each date has one row per channel, so we just sum by date.
+  // Aggregate sales by date for the line chart
   const aggregatedByDate = {};
   marketingData.forEach((row) => {
     const date = row.Date;
@@ -73,7 +105,6 @@ const Marketing = () => {
       aggregatedByDate[date] += sales;
     }
   });
-  // Convert aggregated object to an array suitable for Recharts
   const salesLineData = Object.keys(aggregatedByDate).map((date) => ({
     date,
     sales: aggregatedByDate[date]
@@ -84,7 +115,6 @@ const Marketing = () => {
       <Typography variant="h4" gutterBottom>
         Marketing Data
       </Typography>
-
       <Button variant="contained" onClick={handleImportClick} sx={{ mb: 2 }}>
         Import Marketing CSV
       </Button>
@@ -95,34 +125,32 @@ const Marketing = () => {
         onChange={handleFileUpload}
         style={{ display: 'none' }}
       />
-
       {marketingData.length === 0 ? (
         <Typography>No marketing data loaded.</Typography>
       ) : (
         <Box sx={{ mt: 3 }}>
-          {/* TOP CARDS / KPI */}
+          {/* KPI Cards */}
           <Grid container spacing={2} sx={{ mb: 3 }}>
-            <Grid item xs={12} sm={4} md={4}>
+            <Grid item xs={12} sm={4}>
               <Paper sx={{ p: 2, textAlign: 'center' }}>
                 <Typography variant="h6">Total Sessions</Typography>
                 <Typography variant="h5">{totalSessions}</Typography>
               </Paper>
             </Grid>
-            <Grid item xs={12} sm={4} md={4}>
+            <Grid item xs={12} sm={4}>
               <Paper sx={{ p: 2, textAlign: 'center' }}>
                 <Typography variant="h6">Total Orders</Typography>
                 <Typography variant="h5">{totalOrders}</Typography>
               </Paper>
             </Grid>
-            <Grid item xs={12} sm={4} md={4}>
+            <Grid item xs={12} sm={4}>
               <Paper sx={{ p: 2, textAlign: 'center' }}>
                 <Typography variant="h6">Total Sales</Typography>
                 <Typography variant="h5">${totalSales}</Typography>
               </Paper>
             </Grid>
           </Grid>
-
-          {/* LINE CHART: Sales Over Time */}
+          {/* Line Chart: Sales Over Time */}
           <Paper sx={{ p: 2, mb: 3 }}>
             <Typography variant="h6" gutterBottom>
               Sales Over Time
@@ -142,14 +170,12 @@ const Marketing = () => {
               </Box>
             )}
           </Paper>
-
-          {/* TABLE OF ALL ROWS */}
+          {/* Table of Marketing Data */}
           <Paper>
             <TableContainer sx={{ maxHeight: 400 }}>
               <Table stickyHeader>
                 <TableHead>
                   <TableRow>
-                    {/* Adjust these columns to match your CSV */}
                     <TableCell>Date</TableCell>
                     <TableCell>Channel</TableCell>
                     <TableCell>Sessions</TableCell>
@@ -157,7 +183,6 @@ const Marketing = () => {
                     <TableCell>Sales</TableCell>
                     <TableCell>CTR</TableCell>
                     <TableCell>Cost</TableCell>
-                    {/* etc. */}
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -170,7 +195,6 @@ const Marketing = () => {
                       <TableCell>{row.Sales}</TableCell>
                       <TableCell>{row.CTR}</TableCell>
                       <TableCell>{row.Cost}</TableCell>
-                      {/* etc. */}
                     </TableRow>
                   ))}
                 </TableBody>
