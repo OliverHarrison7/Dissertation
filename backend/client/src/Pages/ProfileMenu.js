@@ -17,9 +17,11 @@ const ProfileMenu = () => {
   };
 
   const handleAccountClick = () => {
-    handleMenuClose();
-    navigate('/my-account');  // Make sure this is exactly "/my-account"
+    const targetRoute = '/my-account';
+    console.log('Navigating to:', targetRoute);
+    navigate(targetRoute);
   };
+  
 
   const handleLogoutClick = () => {
     handleMenuClose();

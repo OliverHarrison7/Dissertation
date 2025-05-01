@@ -1,3 +1,4 @@
+// client/src/components/NavBar.js
 import React, { useState } from 'react';
 import {
   AppBar,
@@ -18,36 +19,31 @@ import LogoutIcon from '@mui/icons-material/Logout';
 function NavBar() {
   const navigate = useNavigate();
 
-  // State for anchoring the profile menu
+  /* ---------- state for profile menu ---------- */
   const [anchorEl, setAnchorEl] = useState(null);
 
-  // Example search handling
+  /* ---------- search handling (press Enter) ---------- */
   const handleSearch = (e) => {
     if (e.key === 'Enter') {
       console.log('Search value:', e.target.value);
-      // Potentially navigate to a search results page:
+      // Example:
       // navigate(`/search?query=${encodeURIComponent(e.target.value)}`);
     }
   };
 
-  // Handlers for the profile menu
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleProfileMenuClose = () => {
-    setAnchorEl(null);
-  };
+  /* ---------- profile-menu handlers ---------- */
+  const handleProfileMenuOpen  = (event) => setAnchorEl(event.currentTarget);
+  const handleProfileMenuClose = ()     => setAnchorEl(null);
 
   const handleMyAccount = () => {
     handleProfileMenuClose();
-    // e.g. navigate to /account
+    // IMPORTANT: keep the dash — all routes use /my-account
     navigate('/my-account');
   };
 
   const handleLogout = () => {
     handleProfileMenuClose();
-    // e.g. clear auth tokens, navigate to /login
-    console.log('Logging out...');
+    console.log('Logging out…');
     navigate('/login');
   };
 
@@ -63,57 +59,45 @@ function NavBar() {
           MyBrand
         </Typography>
 
-        {/* Centered Search Bar */}
-        <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', ml: 2, mr: 2 }}>
+        {/* centred search bar */}
+        <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', mx: 2 }}>
           <TextField
             size="small"
-            placeholder="Search..."
+            placeholder="Search…"
             variant="outlined"
             onKeyDown={handleSearch}
-            sx={{
-              width: '400px',
-              backgroundColor: '#fff',
-              borderRadius: 1,
-            }}
+            sx={{ width: 400, bgcolor: '#fff', borderRadius: 1 }}
           />
         </Box>
 
-        {/* Right-side Profile Avatar */}
-        <Box>
-          <IconButton
-            onClick={handleProfileMenuOpen}
-            color="inherit"
-            sx={{ ml: 1 }}
-          >
-            {/* Could use a real user avatar or an icon. 
-                We'll do a generic Avatar with an icon inside. */}
-            <Avatar sx={{ bgcolor: 'primary.main' }}>
-              <AccountCircleIcon />
-            </Avatar>
-          </IconButton>
-          
-          {/* Profile Menu */}
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleProfileMenuClose}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-          >
-            <MenuItem onClick={handleMyAccount}>
-              <ListItemIcon>
-                <AccountCircleIcon fontSize="small" />
-              </ListItemIcon>
-              My Account
-            </MenuItem>
-            <MenuItem onClick={handleLogout}>
-              <ListItemIcon>
-                <LogoutIcon fontSize="small" />
-              </ListItemIcon>
-              Logout
-            </MenuItem>
-          </Menu>
-        </Box>
+        {/* profile avatar */}
+        <IconButton onClick={handleProfileMenuOpen} color="inherit" sx={{ ml: 1 }}>
+          <Avatar sx={{ bgcolor: 'primary.main' }}>
+            <AccountCircleIcon />
+          </Avatar>
+        </IconButton>
+
+        {/* dropdown menu */}
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleProfileMenuClose}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
+          <MenuItem onClick={handleMyAccount}>
+            <ListItemIcon>
+              <AccountCircleIcon fontSize="small" />
+            </ListItemIcon>
+            My Account
+          </MenuItem>
+          <MenuItem onClick={handleLogout}>
+            <ListItemIcon>
+              <LogoutIcon fontSize="small" />
+            </ListItemIcon>
+            Logout
+          </MenuItem>
+        </Menu>
       </Toolbar>
     </AppBar>
   );

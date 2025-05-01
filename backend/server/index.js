@@ -1,11 +1,3 @@
-/***********************************************
- * File: backend/index.js
- * Complete backend including:
- *  - JWT-based auth for users (register, login, GET/PUT /api/users/me)
- *  - CRUD endpoints for Products, Customers, Orders
- *  - Marketing endpoints (GET & POST) to persist CSV data per user
- ***********************************************/
-
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -716,16 +708,6 @@ app.put('/api/settings', authMiddleware, async (req, res) => {
 });
 
 
-
-
-
-
-
-
-
-/****************************************************
- *               Start Server
- ****************************************************/
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

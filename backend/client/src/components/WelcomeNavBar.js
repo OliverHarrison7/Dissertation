@@ -3,75 +3,39 @@ import React from 'react';
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
+const navLinks = ['about', 'services', 'pricing', 'contact', 'login'];
+
 function WelcomeNavBar() {
   const navigate = useNavigate();
 
   return (
-    <AppBar 
-      position="static" 
-      sx={{ 
-        backgroundColor: '#2C3E50', 
-        boxShadow: 3,
-        px: { xs: 2, sm: 4 } 
-      }}
-    >
-      <Toolbar>
+    <AppBar position="static" color="primary" elevation={3}>
+      <Toolbar sx={{ px: { xs: 2, sm: 4 } }}>
         <Typography
           variant="h6"
-          sx={{
-            flexGrow: 1,
-            fontWeight: 'bold',
-            letterSpacing: '.1rem',
-            cursor: 'pointer',
-          }}
           onClick={() => navigate('/')}
+          sx={{ flexGrow: 1, fontWeight: 700, letterSpacing: '.1rem', cursor: 'pointer' }}
         >
           DataPilot
         </Typography>
+
         <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button 
-            color="inherit" 
-            sx={{ textTransform: 'none', fontSize: '1rem' }} 
-            onClick={() => navigate('/about')}
-          >
-            About
-          </Button>
-          <Button 
-            color="inherit" 
-            sx={{ textTransform: 'none', fontSize: '1rem' }} 
-            onClick={() => navigate('/services')}
-          >
-            Services
-          </Button>
-          <Button 
-            color="inherit" 
-            sx={{ textTransform: 'none', fontSize: '1rem' }} 
-            onClick={() => navigate('/pricing')}
-          >
-            Pricing
-          </Button>
-          <Button 
-            color="inherit" 
-            sx={{ textTransform: 'none', fontSize: '1rem' }} 
-            onClick={() => navigate('/contact')}
-          >
-            Contact
-          </Button>
-          <Button 
-            color="inherit" 
-            sx={{ textTransform: 'none', fontSize: '1rem' }} 
-            onClick={() => navigate('/login')}
-          >
-            Login
-          </Button>
-          <Button 
-            variant="contained" 
-            sx={{
-              textTransform: 'none',
-              fontSize: '1rem',
-              backgroundColor: '#f57c00',
-              '&:hover': { backgroundColor: '#e65100' },
-            }}
+          {navLinks.map((path) => (
+            <Button
+              key={path}
+              color="inherit"
+              sx={{ textTransform: 'none', fontSize: '1rem' }}
+              onClick={() => navigate(`/${path}`)}
+            >
+              {path.charAt(0).toUpperCase() + path.slice(1)}
+            </Button>
+          ))}
+
+          {/* CTA – uses secondary colour */}
+          <Button
+            variant="contained"
+            color="secondary"
+            sx={{ textTransform: 'none', fontSize: '1rem' }}
             onClick={() => navigate('/register')}
           >
             Register

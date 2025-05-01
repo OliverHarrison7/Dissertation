@@ -1,67 +1,62 @@
 // client/src/Pages/Welcome.js
 import React from 'react';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Container, Typography, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+
 
 function Welcome() {
   const navigate = useNavigate();
 
   return (
     <>
-    
+      
 
-      {/* Main Hero Section */}
+      {/* hero section */}
       <Box
         sx={{
-          // The navbar is typically ~64px tall, so subtract it
-          height: 'calc(100vh - 64px)',
-          backgroundColor: '#f9fafb', // a light gray typical of dashboard backgrounds
+          minHeight: 'calc(100vh - 64px)',      // subtract AppBar height
+          bgcolor: 'background.default',        // light grey from theme
           display: 'flex',
-          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
           textAlign: 'center',
           px: 2,
         }}
       >
-        <Typography 
-          variant="h2" 
-          sx={{ mb: 2, fontWeight: 'bold' }}
-        >
-          Welcome to DataPilot
-        </Typography>
+        <Container maxWidth="md">
+          <Typography variant="h2" gutterBottom color="text.primary" fontWeight={700}>
+            Welcome to&nbsp;DataPilot
+          </Typography>
 
-        <Typography 
-          variant="h6" 
-          sx={{ mb: 4, color: 'text.secondary', maxWidth: '600px' }}
-        >
-          Harness the power of data-driven insights for your e-commerce business. 
-          Explore tailored solutions, discover powerful analytics, and transform your store today.
-        </Typography>
+          <Typography
+            variant="h6"
+            color="text.secondary"
+            sx={{ mb: 4, maxWidth: 600, mx: 'auto' }}
+          >
+            Harness the power of data-driven insights for your e-commerce
+            business. Discover powerful analytics and transform your store today.
+          </Typography>
 
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button
-            variant="contained"
-            sx={{ 
-              backgroundColor: '#2C3E50',
-              '&:hover': { backgroundColor: '#1f2d3b' },
-            }}
-            onClick={() => navigate('/register')}
-          >
-            Get Started
-          </Button>
-          <Button
-            variant="outlined"
-            sx={{
-              color: '#2C3E50',
-              borderColor: '#2C3E50',
-              '&:hover': { borderColor: '#1f2d3b', color: '#1f2d3b' },
-            }}
-            onClick={() => navigate('/login')}
-          >
-            Login
-          </Button>
-        </Box>
+          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
+            <Button
+              size="large"
+              variant="contained"
+              color="primary"
+              onClick={() => navigate('/register')}
+            >
+              Get Started
+            </Button>
+
+            <Button
+              size="large"
+              variant="outlined"
+              color="primary"
+              onClick={() => navigate('/login')}
+            >
+              Login
+            </Button>
+          </Box>
+        </Container>
       </Box>
     </>
   );
